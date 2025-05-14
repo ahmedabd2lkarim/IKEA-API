@@ -23,6 +23,7 @@ app.use((err,req,res,next)=>{
     res.json(err).status(500)
 })
 
+
 app.use("/api/cart",cartRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
