@@ -19,7 +19,7 @@ exports.createProduct = async (req, res) => {
 exports.getAllProducts = catchAsync(async (req, res) => {
   const { 
     page = 1, 
-    limit = 10, 
+    limit = 100, 
     sort = '-createdAt',
     category,
     priceMin,
@@ -64,9 +64,9 @@ exports.getAllProducts = catchAsync(async (req, res) => {
 
 exports.getProductById = async (req, res) => {
     try {
-        if (req.user.role == "vendor") {
-            return res.status(403).json("Only Admins and Users");
-        }
+        // if (req.user.role == "vendor") {
+        //     return res.status(403).json("Only Admins and Users");
+        // }
         const product = await Product.findById(req.params.id);
         if (!product) return res.status(404).json({ message: "Product not found" });
         res.json(product);
@@ -147,4 +147,21 @@ exports.getProductsByCategory = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
+};
+
+exports.getProductsByColor = async (req, res) => {
+  try {
+    const { color, language = 'en' } = req.query;
+    const query = {};
+    
+    if (color) {
+      // Case-insensitive search for color
+      query[`color.${language}`] = new RegExp(color, 'i');
+    }
+
+    const products = await Product.find(query);
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };

@@ -1,97 +1,121 @@
 const mongoose = require("mongoose");
 
-const variantSchema = new mongoose.Schema({
-  id: {
-    type: String,
-    required: true,
-  },
-  name: {
-    type: String,
-    required: true,
-  },
-  price: {
-    currency: {
+const variantSchema = new mongoose.Schema(
+  {
+    name: {
       type: String,
       required: true,
     },
-    currentPrice: {
-      type: Number,
-      required: true,
+    color: {
+      en: { type: String },
+      ar: { type: String },
     },
-    discounted: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  url: {
-    en: { type: String },
-    ar: { type: String },
-  },
-  contextualImageUrl: {
-    type: String,
-    required: true,
-  },
-  measurement: {
-    en: { type: String },
-    ar: { type: String },
-  },
-  typeName: {
-    en: { type: String },
-    ar: { type: String },
-  },
-  imageAlt: {
-    en: { type: String },
-    ar: { type: String },
-  },
-  short_description: {
-    en: { type: String },
-    ar: { type: String },
-  },
-  product_details: {
-    product_details_paragraphs: {
-      en: [String],
-      ar: [String],
-    },
-    expandable_sections: {
-      materials_and_care: {
-        en: { type: String },
-        ar: { type: String },
+    price: {
+      currency: {
+        type: String,
+        required: true,
       },
-      details_certifications: {
-        en: { type: String },
-        ar: { type: String },
+      currentPrice: {
+        type: Number,
+        required: true,
       },
-      good_to_know: {
-        en: { type: String },
-        ar: { type: String },
-      },
-      safety_and_compliance: {
-        en: { type: String },
-        ar: { type: String },
-      },
-      assembly_and_documents: {
-        en: { type: String },
-        ar: { type: String },
+      discounted: {
+        type: Boolean,
+        default: false,
       },
     },
+    contextualImageUrl: {
+      type: String,
+      required: false,
+    },
+    measurement: {
+      unit: {
+        type: String,
+        required: false,
+      },
+      width: {
+        type: Number,
+        required: false,
+      },
+      height: {
+        type: Number,
+        required: false,
+      },
+      depth: {
+        type: Number,
+        required: false,
+      },
+      length: {
+        type: Number,
+        required: false,
+      },
+    },
+    typeName: {
+      en: { type: String },
+      ar: { type: String },
+    },
+    imageAlt: {
+      en: { type: String },
+      ar: { type: String },
+    },
+    short_description: {
+      en: { type: String },
+      ar: { type: String },
+    },
+    product_details: {
+      product_details_paragraphs: {
+        en: [String],
+        ar: [String],
+      },
+      expandable_sections: {
+        materials_and_care: {
+          en: { type: String },
+          ar: { type: String },
+        },
+        details_certifications: {
+          en: { type: String },
+          ar: { type: String },
+        },
+        good_to_know: {
+          en: { type: String },
+          ar: { type: String },
+        },
+        safety_and_compliance: {
+          en: { type: String },
+          ar: { type: String },
+        },
+        assembly_and_documents: {
+          en: { type: String },
+          ar: { type: String },
+        },
+      },
+    },
+    images: [String],
   },
-  images: [String],
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
+);
+
+variantSchema.virtual("fullUrl").get(function () {
+  const categorySlug =
+    this.parent().categoryName?.toLowerCase().replace(/\s+/g, "-") ||
+    "category";
+  return `/products/${categorySlug}/${this.parent()._id}/variants/${this._id}`;
 });
 
 const productSchema = new mongoose.Schema(
   {
-    id: {
-      type: String,
-      required: true,
-      unique: true,
-      index: true, 
-    },
     name: {
       type: String,
       required: true,
       index: true,
     },
-
+    color: {
+      en: { type: String },
+      ar: { type: String},
+    },
     price: {
       currency: {
         type: String,
@@ -107,14 +131,16 @@ const productSchema = new mongoose.Schema(
       },
     },
 
-    url: {
-      en: { type: String },
-      ar: { type: String },
-    },
-
     measurement: {
-      en: { type: String },
-      ar: { type: String },
+      width: {
+        type: Number,
+      },
+      height: {
+        type: Number,
+      },
+      depth: {
+        type: Number,
+      },
     },
     typeName: {
       en: { type: String },
@@ -123,14 +149,12 @@ const productSchema = new mongoose.Schema(
 
     contextualImageUrl: {
       type: String,
-      required: true,
     },
     imageAlt: {
       en: { type: String },
       ar: { type: String },
     },
     images: [String],
-
     short_description: {
       en: { type: String },
       ar: { type: String },
@@ -168,23 +192,23 @@ const productSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true, 
+      index: true,
     },
     categoryId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
       required: true,
-      index: true, 
+      index: true,
     },
 
     vendorName: {
       type: String,
       required: true,
-    }, 
+    },
     categoryName: {
       type: String,
       required: true,
-    }, 
+    },
 
     variants: [variantSchema],
 
@@ -199,24 +223,29 @@ const productSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-    toJSON: { virtuals: true }, 
-    toObject: { virtuals: true }, 
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   }
 );
 
 productSchema.virtual("fullUrl").get(function () {
-  return `/products/${this.id}`;
+  const categorySlug =
+    this.categoryName?.toLowerCase().replace(/\s+/g, "-") || "category";
+  return `/products/${categorySlug}/${this._id}`;
 });
 
 productSchema.index({
   name: "text",
   "short_description.en": "text",
   "short_description.ar": "text",
-}); 
-productSchema.index({ "price.currentPrice": 1 }); 
-productSchema.index({ createdAt: -1 }); 
-productSchema.index({ inStock: 1 }); 
-
+});
+productSchema.index({ "price.currentPrice": 1 });
+productSchema.index({ createdAt: -1 });
+productSchema.index({ inStock: 1 });
+productSchema.index({ "color.en": 1, "color.ar": 1 });
+productSchema.index({ "measurement.width": 1 });
+productSchema.index({ "measurement.height": 1 });
+productSchema.index({ "measurement.depth": 1 });
 
 productSchema.pre("save", async function (next) {
   if (this.isModified("vendorId") || this.isNew) {
