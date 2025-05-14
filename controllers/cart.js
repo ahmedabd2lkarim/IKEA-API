@@ -158,6 +158,35 @@ let updateOrderAmount = async (req, res) => {
     }
 }
 
+let deleteOrderItem = async (req, res) => {
+    try {
+        if (req.user.role !== 'user') {
+            return res.status(403).json("Only Users can delete orders");
+        }
+        let subTotal = 0;
+        let cart = [];
+        const { id } = req.params
+        const  {prdID} = req.body;
+        let order = await CartModel.findOne({ _id: id, userID: req.user.id });
+        for (let prd of order.orderItems) {
+                let product = await Product.findById(prd.prdID);
+                let singleItem = {};
+                if (prd.prdID != prdID) {  
+                    subTotal += (product.price.currentPrice * prd.quantity);
+                    singleItem = { prdID: prd.prdID, quantity: prd.quantity };
+                    cart.push(singleItem);                      
+                }
+            };            
+            order.total = subTotal + order.shippingFee;
+            order.subTotal = subTotal;
+            order.orderItems = cart;
+            await order.save();
+            res.status(202).json(order)
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error });
+    }
+}
+
 module.exports = {
     getAllOrders,
     getOrdersByVendor,
@@ -165,5 +194,6 @@ module.exports = {
     deleteOrder,
     createOrder,
     updateOrderStatus,
-    updateOrderAmount
+    updateOrderAmount,
+    deleteOrderItem
 };
