@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {auth} = require("../middleware/auth");
-const {getAllOrders,getOrderById,getOrdersByVendor,getCurrentUserOrder,deleteOrder,createOrder,updateOrderStatus,updateOrderAmount} = require('../controllers/cart')
+const {getAllOrders,deleteOrderItem,getOrdersByVendor,getCurrentUserOrder,deleteOrder,createOrder,updateOrderStatus,updateOrderAmount} = require('../controllers/cart')
 
 router.get('/',auth,getAllOrders);     
 
@@ -16,4 +16,7 @@ router.delete('/:id',auth,deleteOrder);
 router.patch('/amount/:id',auth,updateOrderAmount);
 
 router.patch('/status/:id',auth,updateOrderStatus);
+
+router.patch('/deleteItem/:id',auth,deleteOrderItem);
+
 module.exports = router;
