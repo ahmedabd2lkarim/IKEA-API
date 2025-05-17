@@ -114,7 +114,7 @@ const productSchema = new mongoose.Schema(
     },
     color: {
       en: { type: String },
-      ar: { type: String},
+      ar: { type: String },
     },
     price: {
       currency: {
@@ -140,6 +140,14 @@ const productSchema = new mongoose.Schema(
       },
       depth: {
         type: Number,
+      },
+      unit: {
+        type: String,
+        required: false,
+      },
+      length: {
+        type: Number,
+        required: false,
       },
     },
     typeName: {

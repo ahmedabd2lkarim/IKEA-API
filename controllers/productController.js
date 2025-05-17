@@ -19,7 +19,7 @@ exports.createProduct = async (req, res) => {
 exports.getAllProducts = catchAsync(async (req, res) => {
   const { 
     page = 1, 
-    limit = 100, 
+    limit = 20, 
     sort = '-createdAt',
     category,
     priceMin,
@@ -79,11 +79,26 @@ exports.getProductById = async (req, res) => {
 exports.updateProduct = async (req, res) => {
     try {
         if (req.user.role !== "vendor") {
-            return res.status(403).json("Only Vendors");
+            return res.status(403).json({ message: "Access denied: Only vendors allowed hello" });
         }
-        const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-        if (!product) return res.status(404).json({ message: "Product not found" });
-        res.json(product);
+
+        // Check if product belongs to vendor
+        const product = await Product.findOne({
+            _id: req.params.id,
+            vendorId: req.user.id
+        });
+
+        if (!product) {
+            return res.status(404).json({ message: "Product not found or unauthorized" });
+        }
+
+        const updatedProduct = await Product.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true, runValidators: true }
+        );
+
+        res.json(updatedProduct);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
@@ -106,13 +121,14 @@ exports.deleteProduct = async (req, res) => {
 
 exports.getVendorProducts = async (req, res) => {
     try {
-        if (req.user.role !== "vendor") {
+      if (req.user.role !== "vendor") {
+          console.log(req.user.role);
             return res.status(403).json("Only Vendors");
         }
         const products = await Product.find({ vendorId: req.user.id });
         res.json(products);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: error.message+" hello" });
     }
 };
 

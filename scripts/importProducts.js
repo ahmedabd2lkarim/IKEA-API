@@ -8,8 +8,13 @@ const validateProduct = require("../utils/productValidator");
 require("dotenv").config({ path: path.join(__dirname, "../.env") });
 
 async function getDefaultIds() {
-  const vendor = await User.findOne({ role: "vendor" });
-  const category = await Category.findOne();
+  const vendor = await User.findOne({
+    _id: "6824f525a759d67a4cbd4635",
+    role: "vendor",
+  });
+  const category = await Category.findOne({
+    _id: "67b724ef9379cb0ddd1b0960",
+  });
 
   if (!vendor || !category) {
     throw new Error("Please create at least one vendor and category first");
@@ -74,7 +79,7 @@ async function importProducts() {
 
     const { vendorId, categoryId, vendorName, categoryName } =
       await getDefaultIds();
-    const productsData = require("../data2.json");
+    const productsData = require("../Decoration.json");
 
     let importStats = {
       totalProducts: productsData.products.length,

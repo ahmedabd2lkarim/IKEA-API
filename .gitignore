@@ -13,6 +13,9 @@ dist-ssr
 *.local
 .env
 data2.json
+Textiles.json
+Decoration.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
