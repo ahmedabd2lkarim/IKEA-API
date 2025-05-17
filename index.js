@@ -9,6 +9,11 @@ const adminRoutes = require("./routes/admin");
 const productRoutes = require('./routes/productRoutes');
 const categoryRoutes=require('./routes/categoryRoutes');
 const dashboardRoutes = require("./routes/dashboard");
+const introRoutes = require("./routes/CategoryIntro");
+const promoRoutes = require("./routes/promoRoutes");
+const teaserRoutes = require("./routes/teaser");
+const favouriteRoutes = require("./routes/favouriteRoutes");
+
 
 dotenv.config();
 
@@ -26,6 +31,11 @@ app.use("/api/admin", adminRoutes);
 app.use('/api/products', productRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/teasers", teaserRoutes);
+app.use("/api/intros", introRoutes);
+app.use('/api/promos', promoRoutes);
+app.use("/api/favourites", favouriteRoutes);
+
 
 
 mongoose
