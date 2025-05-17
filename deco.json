@@ -1,0 +1,111 @@
+{
+    "_id": "681ed31881498f17f7caf6e2",
+    "name": "Decoration",
+    "teasers": [
+        {
+            "title": {
+                "en": "Small boxes with big impact",
+                "ar": "صناديق صغيرة عملية جداً"
+            },
+            "content": {
+                "en": "Give every item a home so decorative that they can happily be kept out in the open. From soft round shapes to patterned inside, these lidded storage boxes nest neatly together when not in use.",
+                "ar": "وفر مساحة تخزين أنيقة لكل غرض من أغراضك بحيث يمكنك حفظها مرئية. توفر صناديق التخزين هذه بأغطيتها إمكانية تخزين مرتب للأغراض عند عدم الحاجة إليها بدءاً من الأشكال الدائرية الانسيابية وحتى المنقوشة في الداخل."
+            },
+            "promoImage": {
+                "en": "https://www.ikea.com/ext/ingkadam/m/7d7d3a8805ca9aee/original/PH196302.JPG?f=xxl"
+            },
+            "promoHotspots": [
+                {
+                    "productId": "67fb23276ea4e90f9f8b52cc",
+                    "top": "60%",
+                    "left": "40%",
+                    "_id": "681ed31881498f17f7caf6e5"
+                }
+            ],
+            "rightImages": [
+                {
+                    "image": {
+                        "en": "https://www.ikea.com/ext/ingkadam/m/4534afb04c60a850/original/PH196337.JPG?f=xxl"
+                    },
+                    "hotspots": [],
+                    "_id": "681ed31881498f17f7caf6e6"
+                }
+            ],
+            "height": 800,
+            "_id": "681ed31881498f17f7caf6e3",
+            "createdAt": "2025-05-10T04:16:24.480Z",
+            "updatedAt": "2025-05-10T04:16:24.480Z"
+        },
+        {
+            "title": {
+                "en": "Show off your favourite things",
+                "ar": "استعرض أغراضك المفضلة"
+            },
+            "content": {
+                "en": "From displaying art to displaying brushes, paint and bottles needed to create art, find your own reason to love MOSSLANDA picture edges.",
+                "ar": "استكشف سر انجذابك لإطارات MOSSLANDA بدءاً من عرض القطع الفنية إلى فرش الألوان والزجاجات المستخدمة في الأعمال الفنية."
+            },
+            "promoImage": {
+                "en": "https://www.ikea.com/ext/ingkadam/m/3091d6457281d802/original/PH188012.jpg?f=xxl"
+            },
+            "promoHotspots": [
+                {
+                    "productId": "67fb240b6ea4e90f9f8b52d4",
+                    "top": "10%",
+                    "left": "15%",
+                    "_id": "681ed31881498f17f7caf6ea"
+                },
+                {
+                    "productId": "67fb240b6ea4e90f9f8b52d4",
+                    "top": "30%",
+                    "left": "15%",
+                    "_id": "681ed31881498f17f7caf6ea"
+                },
+                {
+                    "productId": "67fb1e794bc566c959290f24",
+                    "top": "70%",
+                    "left": "55%",
+                    "_id": "681ed31881498f17f7caf6eb"
+                }
+            ],
+            "rightImages": [
+                {
+                    "image": {
+                        "en": "https://www.ikea.com/ext/ingkadam/m/49720b7066878955/original/PH186682.jpg?f=xxl"
+                    },
+                    "hotspots": [
+                        {
+                            "productId": "67fb240b6ea4e90f9f8b52d4",
+                            "top": "10%",
+                            "left": "85%"
+                        },
+                        {
+                            "productId": "67fb240b6ea4e90f9f8b52d4",
+                            "top": "45%",
+                            "left": "40%"
+                        },
+                        {
+                            "productId": "67fb1e794bc566c959290f24",
+                            "top": "55%",
+                            "left": "65%"
+                        },
+                        {
+                            "productId": "67fb1e794bc566c959290f24",
+                            "top": "53%",
+                            "left": "25%"
+                        }
+                    ],
+                    "_id": "681ed31881498f17f7caf6ec"
+                }
+            ],
+            "height": 800,
+            "_id": "681ed31881498f17f7caf6e9",
+            "createdAt": "2025-05-10T04:16:24.480Z",
+            "updatedAt": "2025-05-10T04:16:24.480Z"
+        }
+    ],
+    "createdAt": "2025-05-10T04:16:24.481Z",
+    "updatedAt": "2025-05-10T04:16:24.481Z",
+    "__v": 0,
+    "categoryId": "67b724ef9379cb0ddd1b0960"
+}

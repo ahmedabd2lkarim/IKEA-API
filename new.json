@@ -1,0 +1,361 @@
+{
+  "_id": "6805c1a20793536e6ad916ec",
+  "name": "Storage",
+  "teasers": [
+    {
+      "title": {
+        "en": "Quality that speaks, design that sings",
+        "ar": "ديكورات حائط ذات مساحة تخزين"
+      },
+      "content": {
+        "en": "The new PAX/TONSTAD doors are the epitome of elegance. The classic design and beautifully brushed veneer add a dreamy look and feel to any bedroom. Paired with the TONSTAD bedroom series, these doors are the final piece in your bedroom puzzle.",
+        "ar": "هل أنت في المنزل؟ ارفع عينيك عن الشاشة وانظر حولك قليلاً. ألا تعتقد أنه يمكن استغلال هذه الحوائط بشكل أفضل؟ يمكن لأنظمة تخزين EKET وBESTÅ أن تساعد في تنظيم منزلك وتحسين مظهره بشكل كبير بفضل ما توفره من حلول متناغمة مصممة خصيصاً للتخزين المفتوح والمغلق التي لا تستغل مساحة كبيرة من منزلك."
+      },
+      "promoImage": {
+        "en": "https://www.ikea.com/ext/ingkadam/m/3cf8d2244d1c5f61/original/PH176840.jpg?f=l"
+      },
+      "promoHotspots": [
+        {
+          "productId": "67fb238d6ea4e90f9f8b52d1",
+          "top": "35%",
+          "left": "50%",
+          "_id": "6805c1a20793536e6ad916ee"
+        },
+        {
+          "productId": "67fb207f4bc566c959290f32",
+          "top": "65%",
+          "left": "70%",
+          "_id": "6805c1a20793536e6ad916ef"
+        },
+        {
+          "productId": "67fb23276ea4e90f9f8b52cc",
+          "top": "75%",
+          "left": "60%",
+          "_id": "6805c1a20793536e6ad916f0"
+        }
+      ],
+      "rightImages": [
+        {
+          "image": {
+            "en": "https://www.ikea.com/ext/ingkadam/m/67f578cf7c4ef8c3/original/PH199250_SHI_001.jpg?f=xs"
+          },
+          "hotspots": [
+            {
+              "productId": "67fb1e794bc566c959290f24",
+              "top": "10%",
+              "left": "60%",
+              "_id": "6805c1a20793536e6ad916f7"
+            },
+            {
+              "productId": "67fb240b6ea4e90f9f8b52d4",
+              "top": "85%",
+              "left": "45%",
+              "_id": "6805c1a20793536e6ad916f8"
+            }
+          ],
+          "_id": "6805c1a20793536e6ad916f3"
+        },
+        {
+          "image": {
+            "en": "https://www.ikea.com/ext/ingkadam/m/4d35f4828da15316/original/PH200252.jpg?f=xs"
+          },
+          "hotspots": [
+            {
+              "productId": "67b7bb04fe504907c41390c9",
+              "top": "15%",
+              "left": "50%",
+              "_id": "6805c1a20793536e6ad916fa"
+            },
+            {
+              "productId": "67b7bb04fe504907c41390c9",
+              "top": "60%",
+              "left": "40%",
+              "_id": "6805c1a20793536e6ad916fb"
+            }
+          ],
+          "_id": "6805c1a20793536e6ad916f9"
+        },
+        {
+          "image": {
+            "en": "https://www.ikea.com/ext/ingkadam/m/e22290a45843e3d/original/PH200230.jpg?f=xs"
+          },
+          "hotspots": [
+            {
+              "productId": "67fb271a6ea4e90f9f8b52de",
+              "top": "25%",
+              "left": "10%",
+              "_id": "6805c1a20793536e6ad916ff"
+            },
+            {
+              "productId": "67fb26796ea4e90f9f8b52d9",
+              "top": "5%",
+              "left": "50%",
+              "_id": "6805c1a20793536e6ad91700"
+            },
+            {
+              "productId": "67fb2d676ea4e90f9f8b52e6",
+              "top": "75%",
+              "left": "20%",
+              "_id": "6805c1a20793536e6ad91701"
+            }
+          ],
+          "_id": "6805c1a20793536e6ad916fe"
+        },
+        {
+          "image": {
+            "en": "https://www.ikea.com/ext/ingkadam/m/13eb89659940a95e/original/PH193363_SHI_001.jpg?f=xs"
+          },
+          "hotspots": [
+            {
+              "productId": "67b8c18a1f59df01ed4b720c",
+              "top": "20%",
+              "left": "35%",
+              "_id": "6805c1a20793536e6ad91704"
+            }
+          ],
+          "_id": "6805c1a20793536e6ad91703"
+        }
+      ],
+      "height": 800,
+      "_id": "6805c1a20793536e6ad916ed",
+      "createdAt": "2025-04-21T03:55:14.709Z",
+      "updatedAt": "2025-04-21T03:55:14.709Z"
+    },
+    {
+      "title": {
+        "en": "Effortlessly tackle the toughest tasks",
+        "ar": "إنجاز أصعب المهام دون عناء"
+      },
+      "content": {
+        "en": "Those who handle the toughest tasks with ease and calm have their own special charm. And beyond that, the BROR storage system offers all the qualities you’d want in a long-term companion: durability, versatility, and high load-bearing capacity for extra storage.",
+        "ar": "يتميز أولئك الذين يتعاملون مع أصعب المهام بكل سهولة وهدوء دون عناء بسحرهم الخاص. وبعيداً عن ذلك فإن مجموعة تخزين BROR تتمتع بجميع المزايا التي تبحث عنها في رفيق طويل الأمد؛ المتانة وتعدد الاستخدام وقدرة التحمل العالية للتخزين الإضافي."
+      },
+      "promoImage": {
+        "en": "https://www.ikea.com/ext/ingkadam/m/6830ab76084bf3fc/original/PH201543.jpg?f=l"
+      },
+      "promoHotspots": [
+        {
+          "productId": "67fb240b6ea4e90f9f8b52d4",
+          "top": "30%",
+          "left": "35%",
+          "_id": "6805c1a20793536e6ad91708"
+        },
+        {
+          "productId": "67fb1e794bc566c959290f24",
+          "top": "70%",
+          "left": "95%",
+          "_id": "6805c1a20793536e6ad91709"
+        },
+        {
+          "productId": "67fb238d6ea4e90f9f8b52d1",
+          "top": "75%",
+          "left": "20%",
+          "_id": "6805c1a20793536e6ad9170a"
+        }
+      ],
+      "rightImages": [
+        {
+          "image": {
+            "en": "https://www.ikea.com/ext/ingkadam/m/76048a096bfc6751/original/PH201541_SHI_001.jpg?f=xs"
+          },
+          "hotspots": [
+            {
+              "productId": "67fb240b6ea4e90f9f8b52d4",
+              "top": "30%",
+              "left": "45%",
+              "_id": "6805c1a20793536e6ad9170e"
+            }
+          ],
+          "_id": "6805c1a20793536e6ad9170d"
+        },
+        {
+          "image": {
+            "en": "https://www.ikea.com/ext/ingkadam/m/5ce4a6298fa26cc1/original/PH201539.jpg?f=xs"
+          },
+          "hotspots": [
+            {
+              "productId": "67b7bb04fe504907c41390c9",
+              "top": "15%",
+              "left": "67%",
+              "_id": "6805c1a20793536e6ad91714"
+            },
+            {
+              "productId": "67b7bb04fe504907c41390c9",
+              "top": "69%",
+              "left": "40%",
+              "_id": "6805c1a20793536e6ad91715"
+            },
+            {
+              "productId": "67b7bb04fe504907c41390c9",
+              "top": "80%",
+              "left": "40%",
+              "_id": "6805c1a20793536e6ad91716"
+            },
+            {
+              "productId": "67b7bb04fe504907c41390c9",
+              "top": "75%",
+              "left": "60%",
+              "_id": "6805c1a20793536e6ad91717"
+            }
+          ],
+          "_id": "6805c1a20793536e6ad91713"
+        },
+        {
+          "image": {
+            "en": "https://www.ikea.com/ext/ingkadam/m/5ce4a6298fa26cc1/original/PH201539.jpg?f=xs"
+          },
+          "hotspots": [
+            {
+              "productId": "67fb271a6ea4e90f9f8b52de",
+              "top": "55%",
+              "left": "45%",
+              "_id": "6805c1a20793536e6ad91719"
+            },
+            {
+              "productId": "67fb26796ea4e90f9f8b52d9",
+              "top": "60%",
+              "left": "30%",
+              "_id": "6805c1a20793536e6ad9171a"
+            },
+            {
+              "productId": "67fb2d676ea4e90f9f8b52e6",
+              "top": "70%",
+              "left": "50%",
+              "_id": "6805c1a20793536e6ad9171b"
+            },
+            {
+              "productId": "67fb2d0e6ea4e90f9f8b52e1",
+              "top": "80%",
+              "left": "10%",
+              "_id": "6805c1a20793536e6ad9171c"
+            }
+          ],
+          "_id": "6805c1a20793536e6ad91718"
+        },
+        {
+          "image": {
+            "en": "https://www.ikea.com/ext/ingkadam/m/1526ff6c6e563a42/original/PH201540_SHI_001.jpg?f=xs"
+          },
+          "hotspots": [
+            {
+              "productId": "67b8c18a1f59df01ed4b720c",
+              "top": "10%",
+              "left": "55%",
+              "_id": "6805c1a20793536e6ad9171e"
+            },
+            {
+              "productId": "67b8c18a1f59df01ed4b720c",
+              "top": "50%",
+              "left": "70%",
+              "_id": "6805c1a20793536e6ad9171f"
+            },
+            {
+              "productId": "67b8c18a1f59df01ed4b720c",
+              "top": "70%",
+              "left": "32%",
+              "_id": "6805c1a20793536e6ad91720"
+            }
+          ],
+          "_id": "6805c1a20793536e6ad9171d"
+        }
+      ],
+      "height": 800,
+      "_id": "6805c1a20793536e6ad91707",
+      "createdAt": "2025-04-21T03:55:14.709Z",
+      "updatedAt": "2025-04-21T03:55:14.709Z"
+    },
+    {
+      "title": {
+        "en": "Show off your design skills with customisable shelving units",
+        "ar": "أظهر مهاراتك في التصميم مع وحدات الرفوف القابلة للتخصيص"
+      },
+      "content": {
+        "en": "Creating a sleek, personalised storage shelves doesn’t need to break the bank. These shelving units are easy to customise and easy to assemble – with a price that’s easy to love – so you can design a storage solution that truly fits your style and space.",
+        "ar": "تصميم رفوف تخزين أنيقة ومخصصة لا يجب أن يكون مكلفًا. هذه الوحدات سهلة التخصيص وسهلة التركيب – وبسعر ستقع في حبه – لتتمكن من ابتكار حل تخزين يعكس ذوقك تمامًا ويتناسب مع مساحتك."
+      },
+      "promoImage": {
+        "en": "https://www.ikea.com/ext/ingkadam/m/3f43aa8feb04448f/original/PH188188.jpg?f=l"
+      },
+      "promoHotspots": [
+        {
+          "productId": "67fb240b6ea4e90f9f8b52d4",
+          "top": "30%",
+          "left": "45%",
+          "_id": "6805c1a20793536e6ad91722"
+        },
+        {
+          "productId": "67fb1e794bc566c959290f24",
+          "top": "70%",
+          "left": "60%",
+          "_id": "6805c1a20793536e6ad91723"
+        },
+        {
+          "productId": "67fb238d6ea4e90f9f8b52d1",
+          "top": "10%",
+          "left": "40%",
+          "_id": "6805c1a20793536e6ad91724"
+        },
+        {
+          "productId": "67fb207f4bc566c959290f32",
+          "top": "65%",
+          "left": "70%",
+          "_id": "6805c1a20793536e6ad91725"
+        },
+        {
+          "productId": "67fb23276ea4e90f9f8b52cc",
+          "top": "35%",
+          "left": "70%",
+          "_id": "6805c1a20793536e6ad91726"
+        }
+      ],
+      "rightImages": [
+        {
+          "image": {
+            "en": "https://www.ikea.com/ext/ingkadam/m/7c61b386763d09a3/original/PE843725-crop002.jpg?f=l"
+          },
+          "hotspots": [
+            {
+              "productId": "67fb240b6ea4e90f9f8b52d4",
+              "top": "30%",
+              "left": "45%",
+              "_id": "6805c1a20793536e6ad91728"
+            },
+            {
+              "productId": "67fb1e794bc566c959290f24",
+              "top": "70%",
+              "left": "60%",
+              "_id": "6805c1a20793536e6ad91729"
+            },
+            {
+              "productId": "67fb238d6ea4e90f9f8b52d1",
+              "top": "10%",
+              "left": "40%",
+              "_id": "6805c1a20793536e6ad9172a"
+            },
+            {
+              "productId": "67fb207f4bc566c959290f32",
+              "top": "65%",
+              "left": "70%",
+              "_id": "6805c1a20793536e6ad9172b"
+            },
+            {
+              "productId": "67fb23276ea4e90f9f8b52cc",
+              "top": "35%",
+              "left": "70%",
+              "_id": "6805c1a20793536e6ad9172c"
+            }
+          ],
+          "_id": "6805c1a20793536e6ad91727"
+        }
+      ],
+      "height": 800,
+      "_id": "6805c1a20793536e6ad91721",
+      "createdAt": "2025-04-21T03:55:14.709Z",
+      "updatedAt": "2025-04-21T03:55:14.709Z"
+    }
+  ],
+  "createdAt": "2025-04-21T03:55:14.710Z",
+  "updatedAt": "2025-04-21T03:55:14.710Z",
+  "__v": 0,
+  "categoryId": "67b724ef9379cb0ddd1b0972"
+}
