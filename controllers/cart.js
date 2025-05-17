@@ -79,25 +79,25 @@ let createOrder = async (req, res) => {
         if (req.user.role !== 'user') {
             return res.status(403).json("Only Users can create orders");
         }
-        let subTotal = 0;
-        let cart = [];
-        let total = 0;
-        const { orderItems, shippingFee } = req.body;
+        const { orderItems, shippingFee = 20 } = req.body;
         if (orderItems.length < 1) {
             return res.status(400).json("No order Items provided")
         }
-        for (let prd of orderItems) {
-            let product = await Product.findById(prd.prdID);
-            if (!product) {
-                return res.status(400).json("No product found")
-            }
-            subTotal += (product.price.currentPrice * prd.quantity);
-            let singleItem = { prdID: prd.prdID, quantity: prd.quantity };
-            cart.push(singleItem);
-        };
-        total = subTotal + shippingFee;
-        const order = await CartModel.create({ total, orderItems: cart, shippingFee, subTotal, userID: req.user.id });
-        res.status(201).json({ message: "Order created", order });
+        let order = await CartModel.findOne({ userID: req.user.id });
+
+        if (order) {
+            order.orderItems = orderItems;
+            order.subTotal = await calculateSubTotal(order.orderItems);
+            order.total = order.subTotal + order.shippingFee;
+            await order.save();
+            return res.status(200).json({ message: "Order updated", order });
+        }
+        else {
+            let subTotal = await calculateSubTotal(orderItems);
+            let total = subTotal + shippingFee;
+            const neworder = await CartModel.create({ total, orderItems, shippingFee, subTotal, userID: req.user.id });
+            res.status(201).json({ message: "Order created", neworder });
+        }
     } catch (error) {
         res.status(500).json({ message: "Server error", error });
     }
@@ -130,7 +130,6 @@ let updateOrderAmount = async (req, res) => {
         const { id } = req.params;
         const { prdID, quantity } = req.body;
         let newPro = await Product.findById(prdID);
-        console.log(newPro);
         if (!newPro) {
             return res.status(400).json("No product found")
         }
@@ -166,26 +165,38 @@ let deleteOrderItem = async (req, res) => {
         let subTotal = 0;
         let cart = [];
         const { id } = req.params
-        const  {prdID} = req.body;
+        const { prdID } = req.body;
         let order = await CartModel.findOne({ _id: id, userID: req.user.id });
         for (let prd of order.orderItems) {
-                let product = await Product.findById(prd.prdID);
-                let singleItem = {};
-                if (prd.prdID != prdID) {  
-                    subTotal += (product.price.currentPrice * prd.quantity);
-                    singleItem = { prdID: prd.prdID, quantity: prd.quantity };
-                    cart.push(singleItem);                      
-                }
-            };            
-            order.total = subTotal + order.shippingFee;
-            order.subTotal = subTotal;
-            order.orderItems = cart;
-            await order.save();
-            res.status(202).json(order)
+            let product = await Product.findById(prd.prdID);
+            let singleItem = {};
+            if (prd.prdID != prdID) {
+                subTotal += (product.price.currentPrice * prd.quantity);
+                singleItem = { prdID: prd.prdID, quantity: prd.quantity };
+                cart.push(singleItem);
+            }
+        };
+        order.total = subTotal + order.shippingFee;
+        order.subTotal = subTotal;
+        order.orderItems = cart;
+        await order.save();
+        res.status(202).json(order)
     } catch (error) {
         res.status(500).json({ message: "Server error", error });
     }
 }
+const calculateSubTotal = async (orderItems) => {
+    let subTotal = 0;
+
+    for (const item of orderItems) {
+
+        const product = await Product.findById(item.prdID);
+        if (!product) throw new Error("Product not found");
+        subTotal += product.price.currentPrice * item.quantity;
+    }
+
+    return subTotal;
+};
 
 module.exports = {
     getAllOrders,
