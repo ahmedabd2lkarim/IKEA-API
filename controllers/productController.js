@@ -17,55 +17,94 @@ exports.createProduct = async (req, res) => {
 
 
 exports.getAllProducts = catchAsync(async (req, res) => {
-  try {
-    
-    const { 
-      page = 1, 
-      limit = 20, 
-      sort = '-createdAt',
-      category,
-      priceMin,
-      priceMax,
-      search
+  const {
+    page = 1,
+    limit = 100,
+    sort = "-createdAt",
+    categoryName,
+    priceMin,
+    priceMax,
+    search,
+    color,
+    minWidth,
+    maxWidth,
+    minHeight,
+    maxHeight,
+    minDepth,
+    maxDepth,
+    language = "en",
   } = req.query;
 
   const query = {};
-  
 
-  if (category) query.categoryId = category;
-  if (priceMin || priceMax) {
-    query['price.currentPrice'] = {};
-    if (priceMin) query['price.currentPrice'].$gte = Number(priceMin);
-    if (priceMax) query['price.currentPrice'].$lte = Number(priceMax);
+  // Category name filtering
+  if (categoryName) {
+    query[`categoryName`] = { $regex: categoryName, $options: "i" };
   }
+
+  // Price range filtering
+  if (priceMin || priceMax) {
+    query["price.currentPrice"] = {};
+    if (priceMin) query["price.currentPrice"].$gte = Number(priceMin);
+    if (priceMax) query["price.currentPrice"].$lte = Number(priceMax);
+  }
+
+  // Color filtering
+  if (color) {
+    query[`color.${language}`] = { $regex: color, $options: "i" };
+  }
+
+  // Width filtering
+  if (minWidth || maxWidth) {
+    query["measurement.width"] = {};
+    if (minWidth) query["measurement.width"].$gte = Number(minWidth);
+    if (maxWidth) query["measurement.width"].$lte = Number(maxWidth);
+  }
+
+  // Height filtering
+  if (minHeight || maxHeight) {
+    query["measurement.height"] = {};
+    if (minHeight) query["measurement.height"].$gte = Number(minHeight);
+    if (maxHeight) query["measurement.height"].$lte = Number(maxHeight);
+  }
+
+  // Depth filtering
+  if (minDepth || maxDepth) {
+    query["measurement.depth"] = {};
+    if (minDepth) query["measurement.depth"].$gte = Number(minDepth);
+    if (maxDepth) query["measurement.depth"].$lte = Number(maxDepth);
+  }
+
+  // Search in name and description
   if (search) {
     query.$or = [
-      { name: { $regex: search, $options: 'i' } },
-      { 'short_description.en': { $regex: search, $options: 'i' } },
-      { 'short_description.ar': { $regex: search, $options: 'i' } }
+      { name: { $regex: search, $options: "i" } },
+      { [`short_description.${language}`]: { $regex: search, $options: "i" } },
+      {
+        [`product_details.product_details_paragraphs.${language}`]: {
+          $regex: search,
+          $options: "i",
+        },
+      },
     ];
   }
-  
+
   const products = await Product.find(query)
-  .sort(sort)
-  .limit(limit * 1)
-  .skip((page - 1) * limit)
-  .populate('categoryId', 'name');
-  
+    .sort(sort)
+    .limit(limit * 1)
+    .skip((page - 1) * limit);
+
   const total = await Product.countDocuments(query);
-  
+
   res.status(200).json({
-    status: 'success',
+    status: "success",
     results: products.length,
     totalPages: Math.ceil(total / limit),
-    currentPage: page,
-    data: products
+    currentPage: Number(page),
+    total,
+    data: products,
   });
-  } catch (error) {
-    es.status(500).json({ error: error.message });
-}
 });
-
 
 exports.getProductById = async (req, res) => {
     try {

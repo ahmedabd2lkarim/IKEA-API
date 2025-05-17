@@ -144,8 +144,6 @@ async function importProducts() {
             }
           }
 
-          ///////////////////
-          // Handle color extraction from imageAlt
           const productColors = extractProductColors(product.imageAlt);
 
           const variants = (product.variants || [])
@@ -308,7 +306,7 @@ async function importProducts() {
                 return null;
               }
             })
-            .filter(Boolean); // Remove any null variants
+            .filter(Boolean);
 
           if (variants.length > 0) {
             importStats.productsWithVariants++;
@@ -341,7 +339,6 @@ async function importProducts() {
       })
       .filter(Boolean);
 
-    // Log import statistics
     console.log(`
 Import Statistics:
 - Total products processed: ${importStats.processedProducts}
