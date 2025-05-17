@@ -86,16 +86,7 @@ let createOrder = async (req, res) => {
         let order = await CartModel.findOne({ userID: req.user.id });
 
         if (order) {
-            orderItems.forEach((newitem) => {
-                let exisitingItem = order.orderItems.find((prd) => prd.prdID == newitem.prdID);
-                if (exisitingItem) {
-                    exisitingItem.quantity += newitem.quantity;
-                }
-                else {
-                    order.orderItems.push(newitem);
-                }
-            })
-
+            order.orderItems = orderItems;
             order.subTotal = await calculateSubTotal(order.orderItems);
             order.total = order.subTotal + order.shippingFee;
             await order.save();
