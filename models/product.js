@@ -102,7 +102,7 @@ variantSchema.virtual("fullUrl").get(function () {
   const categorySlug =
     this.parent().categoryName?.toLowerCase().replace(/\s+/g, "-") ||
     "category";
-  return `/products/${categorySlug}/${this.parent()._id}/variants/${this._id}`;
+  return `/products/${categorySlug}/${this.parent().name}/variants/${this.name}`;
 });
 
 const productSchema = new mongoose.Schema(
@@ -239,7 +239,7 @@ const productSchema = new mongoose.Schema(
 productSchema.virtual("fullUrl").get(function () {
   const categorySlug =
     this.categoryName?.toLowerCase().replace(/\s+/g, "-") || "category";
-  return `/products/${categorySlug}/${this._id}`;
+  return `/products/${categorySlug}/${this.name}`;
 });
 
 productSchema.index({

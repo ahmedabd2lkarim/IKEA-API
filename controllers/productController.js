@@ -17,14 +17,16 @@ exports.createProduct = async (req, res) => {
 
 
 exports.getAllProducts = catchAsync(async (req, res) => {
-  const { 
-    page = 1, 
-    limit = 20, 
-    sort = '-createdAt',
-    category,
-    priceMin,
-    priceMax,
-    search
+  try {
+    
+    const { 
+      page = 1, 
+      limit = 20, 
+      sort = '-createdAt',
+      category,
+      priceMin,
+      priceMax,
+      search
   } = req.query;
 
   const query = {};
@@ -43,15 +45,15 @@ exports.getAllProducts = catchAsync(async (req, res) => {
       { 'short_description.ar': { $regex: search, $options: 'i' } }
     ];
   }
-
+  
   const products = await Product.find(query)
-    .sort(sort)
-    .limit(limit * 1)
-    .skip((page - 1) * limit)
-    .populate('categoryId', 'name');
-
+  .sort(sort)
+  .limit(limit * 1)
+  .skip((page - 1) * limit)
+  .populate('categoryId', 'name');
+  
   const total = await Product.countDocuments(query);
-
+  
   res.status(200).json({
     status: 'success',
     results: products.length,
@@ -59,14 +61,14 @@ exports.getAllProducts = catchAsync(async (req, res) => {
     currentPage: page,
     data: products
   });
+  } catch (error) {
+    es.status(500).json({ error: error.message });
+}
 });
 
 
 exports.getProductById = async (req, res) => {
     try {
-        // if (req.user.role == "vendor") {
-        //     return res.status(403).json("Only Admins and Users");
-        // }
         const product = await Product.findById(req.params.id);
         if (!product) return res.status(404).json({ message: "Product not found" });
         res.json(product);
@@ -79,10 +81,10 @@ exports.getProductById = async (req, res) => {
 exports.updateProduct = async (req, res) => {
     try {
         if (req.user.role !== "vendor") {
-            return res.status(403).json({ message: "Access denied: Only vendors allowed hello" });
+            return res.status(403).json({ message: "Access denied: Only vendors allowed" });
         }
 
-        // Check if product belongs to vendor
+    
         const product = await Product.findOne({
             _id: req.params.id,
             vendorId: req.user.id
@@ -128,7 +130,7 @@ exports.getVendorProducts = async (req, res) => {
         const products = await Product.find({ vendorId: req.user.id });
         res.json(products);
     } catch (error) {
-        res.status(500).json({ error: error.message+" hello" });
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -156,9 +158,23 @@ exports.getVendorProductById = async (req, res) => {
   }
 };
 
+exports.getProductsVendorByCategory = async (req, res) => {
+    try {
+        if (req.user.role !== "vendor") {
+            return res.status(403).json({ message: "Only vendors can access this endpoint" });
+        }
+        
+        const products = await Product.find({ categoryId: req.params.categoryId, vendorId: req.user.id })
+            .populate('categoryId', 'name');
+        res.json(products);
+    } catch (error) {
+        res.status(500).json({ message: "Category not found" });
+    }
+};
 exports.getProductsByCategory = async (req, res) => {
     try {
-        const products = await Product.find({ categoryId: req.params.categoryId, vendorId: req.user.id });
+        const products = await Product.find({ categoryId: req.params.categoryId })
+            .populate('categoryId', 'name');
         res.json(products);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -171,7 +187,7 @@ exports.getProductsByColor = async (req, res) => {
     const query = {};
     
     if (color) {
-      // Case-insensitive search for color
+
       query[`color.${language}`] = new RegExp(color, 'i');
     }
 
@@ -180,4 +196,119 @@ exports.getProductsByColor = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+};
+
+exports.getProductVariants = async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.productId);
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+        res.json(product.variants);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
+exports.getVariantById = async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.productId);
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+        
+        const variant = product.variants.id(req.params.variantId);
+        if (!variant) {
+            return res.status(404).json({ message: "Variant not found" });
+        }
+        
+        res.json(variant);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
+exports.addVariant = async (req, res) => {
+    try {
+        if (req.user.role !== "vendor") {
+            return res.status(403).json({ message: "Only vendors can add variants" });
+        }
+
+        const product = await Product.findOne({
+            _id: req.params.productId,
+            vendorId: req.user.id
+        });
+
+        if (!product) {
+            return res.status(404).json({ message: "Product not found or unauthorized" });
+        }
+
+        product.variants.push({
+            ...req.body,
+            vendorId: req.user.id,
+            categoryId: product.categoryId
+        });
+
+        await product.save();
+        res.status(201).json(product.variants[product.variants.length - 1]);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+exports.updateVariant = async (req, res) => {
+    try {
+        if (req.user.role !== "vendor") {
+            return res.status(403).json({ message: "Only vendors can update variants" });
+        }
+
+        const product = await Product.findOne({
+            _id: req.params.productId,
+            vendorId: req.user.id
+        });
+
+        if (!product) {
+            return res.status(404).json({ message: "Product not found or unauthorized" });
+        }
+
+        const variant = product.variants.id(req.params.variantId);
+        if (!variant) {
+            return res.status(404).json({ message: "Variant not found" });
+        }
+
+        Object.assign(variant, req.body);
+        await product.save();
+        
+        res.json(variant);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+
+exports.deleteVariant = async (req, res) => {
+    try {
+        if (req.user.role !== "vendor") {
+            return res.status(403).json({ message: "Only vendors can delete variants" });
+        }
+
+        const product = await Product.findOne({
+            _id: req.params.productId,
+            vendorId: req.user.id
+        });
+
+        if (!product) {
+            return res.status(404).json({ message: "Product not found or unauthorized" });
+        }
+
+   
+        product.variants.pull({ _id: req.params.variantId });
+        await product.save();
+        
+        res.json({ message: "Variant deleted successfully" });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
 };
