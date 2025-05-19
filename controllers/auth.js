@@ -151,44 +151,53 @@ const getRequestingAdmin = async (req, res) => {
   }
 };
 
-const getUserProfile = async (req, res) => {
-  try {
-    if (!req.user) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-    const user = await User.findById(req.user.id).select("-password");
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+// const getUserProfile = async (req, res) => {
+//   try {
 
-    res.json({ message: "User profile retrieved successfully", user });
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
-  }
-};
-const updateUserProfile = async (req, res) => {
-  try {
-    if (!req.user) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
 
-    const updates = req.body;
-    if (updates.role) {
-      return res.status(400).json({ message: "Role change not allowed." });
-    }
-    if (req.user.role === "vendor") {
-      if (!updates.storeName || !updates.storeAddress) {
-        return res.status(400).json({ message: "Vendors must have a store name and address." });
-      }
-    }
+    
+//     if (!req.user) {
+//       return res.status(401).json({ message: "Unauthorized" });
+//     }
+//     const user = await User.findById(req.user.id).select("-password");
+//     // const user = await User.findById(req.user.id)
 
-    const updatedUser = await User.findByIdAndUpdate(req.user.id, updates, { new: true, runValidators: true }).select("-password");
 
-    res.json({ message: "User profile updated successfully", user: updatedUser });
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
-  }
-};
+
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     res.json({ message: "User profile retrieved successfully", user });
+//   } catch (error) {
+
+    
+//     res.status(500).json({ message: "Server error", error });
+//   }
+// };
+// const updateUserProfile = async (req, res) => {
+//   try {
+//     if (!req.user) {
+//       return res.status(401).json({ message: "Unauthorized" });
+//     }
+
+//     const updates = req.body;
+//     if (updates.role) {
+//       return res.status(400).json({ message: "Role change not allowed." });
+//     }
+//     if (req.user.role === "vendor") {
+//       if (!updates.storeName || !updates.storeAddress) {
+//         return res.status(400).json({ message: "Vendors must have a store name and address." });
+//       }
+//     }
+
+//     const updatedUser = await User.findByIdAndUpdate(req.user.id, updates, { new: true, runValidators: true }).select("-password");
+
+//     res.json({ message: "User profile updated successfully", user: updatedUser });
+//   } catch (error) {
+//     res.status(500).json({ message: "Server error", error });
+//   }
+// };
 
 const updateAnyUser = async (req, res) => {
   try {
@@ -248,5 +257,86 @@ const updateVendorProfile = async (req, res) => {
   }
 };
 
+const getUserProfile = async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({ message: "User profile retrieved successfully", user });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+const updateUserProfile = async (req, res) => {
+  console.log("Received Data:", req.body);
+  try {
+    if (!req.user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const updates = req.body;
+    if (updates.role) {
+      return res.status(400).json({ message: "Role change not allowed." });
+    }
+    if (req.user.role === "vendor") {
+      if (!updates.storeName || !updates.storeAddress) {
+        return res
+          .status(400)
+          .json({ message: "Vendors must have a store name and address." });
+      }
+    }
+
+    // Password update logic for users
+    if (updates.currentPassword && updates.newPassword) {
+      const user = await User.findById(req.user.id);
+      const isMatch = await bcrypt.compare(
+        updates.currentPassword,
+        user.password
+      );
+      if (!isMatch) {
+        return res
+          .status(400)
+          .json({ message: "Current password is incorrect" });
+      }
+      if (updates.newPassword.length < 8) {
+        return res
+          .status(400)
+          .json({ message: "New password must be at least 8 characters long" });
+      }
+      user.password = await bcrypt.hash(updates.newPassword, 10);
+      // Update other fields if provided
+      if (updates.name) user.name = updates.name;
+      if (updates.email) user.email = updates.email;
+      if (updates.mobileNumber) user.mobileNumber = updates.mobileNumber;
+      if (updates.homeAddress) user.homeAddress = updates.homeAddress;
+      await user.save();
+      const userWithoutPassword = user.toObject();
+      delete userWithoutPassword.password;
+      console.log(res.json)
+      return res.json({
+        message: "User profile and password updated successfully",
+        user: userWithoutPassword,
+      });
+    }
+
+    // If not updating password, proceed as before
+    const updatedUser = await User.findByIdAndUpdate(req.user.id, updates, {
+      new: true,
+      runValidators: true,
+    }).select("-password");
+
+    res.json({
+      message: "User profile updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
 module.exports = { registerUser, login, acceptVendor, deleteUser, getAllUsers, getAllVendors, getRequestingAdmin, getUserProfile, updateUserProfile, updateAnyUser, updateVendorProfile };
 
