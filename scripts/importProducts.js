@@ -13,7 +13,7 @@ async function getDefaultIds() {
     role: "vendor",
   });
   const category = await Category.findOne({
-    _id: "67b724ef9379cb0ddd1b0960",
+    _id: "67b724ef9379cb0ddd1b0962",
   });
 
   if (!vendor || !category) {
@@ -79,7 +79,7 @@ async function importProducts() {
 
     const { vendorId, categoryId, vendorName, categoryName } =
       await getDefaultIds();
-    const productsData = require("../Decoration.json");
+    const productsData = require("../Kitchen.json");
 
     let importStats = {
       totalProducts: productsData.products.length,

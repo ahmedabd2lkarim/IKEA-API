@@ -15,6 +15,7 @@ dist-ssr
 data2.json
 Textiles.json
 Decoration.json
+Kitchen.json
 
 # Editor directories and files
 .vscode/*
