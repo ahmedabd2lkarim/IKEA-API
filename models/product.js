@@ -1,5 +1,20 @@
 const mongoose = require("mongoose");
 
+const formatMeasurement = (measurement) => {
+  if (!measurement) return "";
+
+  const { width, length, depth, height, unit = "cm" } = measurement;
+
+  if (length && !width && !height && !depth) return `${length} ${unit}`;
+  if (width && height && !length && !depth) return `${width}x${height} ${unit}`;
+  if (width && length && height) return `${width}x${length}x${height} ${unit}`;
+  if (width && depth && height) return `${width}x${depth}x${height} ${unit}`;
+
+  return `${width || ""}${width ? "x" : ""}${depth || length || ""}${
+    depth || length ? "x" : ""
+  }${height || ""} ${unit}`;
+};
+
 const variantSchema = new mongoose.Schema(
   {
     name: {
@@ -54,10 +69,6 @@ const variantSchema = new mongoose.Schema(
       en: { type: String },
       ar: { type: String },
     },
-    imageAlt: {
-      en: { type: String },
-      ar: { type: String },
-    },
     short_description: {
       en: { type: String },
       ar: { type: String },
@@ -93,10 +104,28 @@ const variantSchema = new mongoose.Schema(
     images: [String],
   },
   {
+    timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
   }
 );
+
+variantSchema.virtual("imageAlt").get(function () {
+  const parent = this.parent();
+  const productName = parent.name || "منتج";
+
+  const colorEn = this.color?.en || parent.color?.en || "color";
+  const colorAr = this.color?.ar || parent.color?.ar || "لون";
+
+  const productMeasurement = formatMeasurement(
+    this.measurement || parent.measurement
+  );
+
+  return {
+    en: `${productName}, ${colorEn}, ${productMeasurement}`,
+    ar: `${productName}, ${colorAr}, ${productMeasurement}`,
+  };
+});
 
 variantSchema.virtual("fullUrl").get(function () {
   const categorySlug =
@@ -158,10 +187,6 @@ const productSchema = new mongoose.Schema(
     contextualImageUrl: {
       type: String,
     },
-    imageAlt: {
-      en: { type: String },
-      ar: { type: String },
-    },
     images: [String],
     short_description: {
       en: { type: String },
@@ -211,11 +236,11 @@ const productSchema = new mongoose.Schema(
 
     vendorName: {
       type: String,
-      required: true,
+      required: false,
     },
     categoryName: {
       type: String,
-      required: true,
+      required: false,
     },
 
     variants: [variantSchema],
@@ -235,6 +260,21 @@ const productSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+
+productSchema.virtual("imageAlt").get(function () {
+  const productName = this.name || "منتج";
+  const colorEn = this.color?.en || "color";
+  const colorAr = this.color?.ar ||  "لون";
+
+  const productMeasurement = formatMeasurement(
+    this.measurement
+  );
+
+  return {
+    en: `${productName}, ${colorEn}, ${productMeasurement}`,
+    ar: `${productName}, ${colorAr}, ${productMeasurement}`,
+  };
+});
 
 productSchema.virtual("fullUrl").get(function () {
   const categorySlug =
