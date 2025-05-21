@@ -38,7 +38,6 @@ app.use('/api/promos', promoRoutes);
 app.use("/api/favourites", favouriteRoutes);
 
 
-
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))

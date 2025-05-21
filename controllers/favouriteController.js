@@ -115,7 +115,7 @@ exports.renameList = async (req, res) => {
 // Delete a list by listId
 exports.deleteList = async (req, res) => {
     const userId = req.user.id;
-    const { listId } = req.body;  // Accept listId instead of listName
+    const { listId } = req.params
 
     try {
         const favourite = await Favourite.findOne({ userId });

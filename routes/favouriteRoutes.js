@@ -8,7 +8,7 @@ router.post('/add-list',auth , favouriteController.addList);
 router.put('/add-product',auth , favouriteController.addProductToList);
 router.put('/remove-product', auth ,favouriteController.removeProductFromList);
 router.patch('/rename-list', auth ,favouriteController.renameList);
-router.delete('/delete-list', auth, favouriteController.deleteList);
+router.delete('/delete-list/:listId', auth, favouriteController.deleteList);
 router.get('/list/:listId', auth, favouriteController.getListById);
 
 module.exports = router;

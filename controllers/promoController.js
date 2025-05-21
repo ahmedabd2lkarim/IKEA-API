@@ -1,4 +1,6 @@
 const PromoCategory = require('../models/PromoCategory');
+const Product = require("../models/product");
+
 exports.createPromoCategory = async (req, res) => {
     try {
       const { categoryId, name, promos } = req.body;
@@ -29,3 +31,13 @@ exports.createPromoCategory = async (req, res) => {
       res.status(500).json({ error: err.message });
     }
   };
+
+  exports.getProductsByCategory = async (req, res) => {
+      try {
+          const products = await Product.find({ categoryId: req.params.categoryId });
+          res.json(products);
+      } catch (error) {
+          res.status(500).json({ error: error.message });
+      }
+  };
+  
