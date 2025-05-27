@@ -4,15 +4,17 @@ const Category = require("../models/Category_Schema");
 const Product = require("../models/product");
 const bcrypt = require("bcrypt");
 
-
-let getTotalRevenueForMonth = async (req, res) => {
+const getTotalRevenueForMonth = async (req, res) => {
     try {
         const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
         const endOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
 
         const totalRevenue = await CartModel.aggregate([
             {
-                $match: { createdAt: { $gte: startOfMonth, $lte: endOfMonth } , status: "delivered" }
+                $match: {
+                    createdAt: { $gte: startOfMonth, $lte: endOfMonth },
+                    status: "delivered" 
+                }
             },
             {
                 $group: { _id: null, totalRevenue: { $sum: "$total" } }
@@ -24,6 +26,7 @@ let getTotalRevenueForMonth = async (req, res) => {
         res.status(500).json({ message: "Server error", error });
     }
 };
+
 const getUserCount = async (req, res) => {
     try {
         if (!req.user || req.user.role !== "admin") {
@@ -42,7 +45,6 @@ const getUserCount = async (req, res) => {
         res.status(500).json({ message: "Server error", error });
     }
 };
-
 const getRevenueTrends = async (req, res) => {
     try {
         const revenueTrends = await CartModel.aggregate([
