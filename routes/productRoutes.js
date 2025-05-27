@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { auth } = require('../middleware/auth');
-const  checkRole  = require('../middleware/permissions');
+const { auth } = require("../middleware/auth");
+const checkRole = require("../middleware/permissions");
 const {
   createProduct,
   getAllProducts,
@@ -11,184 +11,47 @@ const {
   getProductsByCategory,
   getVendorProducts,
   getProductsByColor,
+  getVendorProductById,
+  addVariant,
+  updateVariant,
+  deleteVariant,
+  getVariantById,
+  getProductVariants,
+  getProductsVendorByCategory,
 } = require("../controllers/productController");
 
-/**
- * @swagger
- * components:
- *   schemas:
- *     Product:
- *       type: object
- *       required:
- *         - name
- *         - price
- *         - category
- *       properties:
- *         name:
- *           type: string
- *           description: The name of the product
- *         price:
- *           type: number
- *           description: The price of the product
- *         description:
- *           type: string
- *           description: Product description
- *         category:
- *           type: string
- *           description: Product category ID
- *         color:
- *           type: string
- *           description: Product color
- */
+router.get("/filter/color", getProductsByColor);
+router.get("/category/:categoryId", getProductsByCategory);
 
-/**
- * @swagger
- * /api/products:
- *   get:
- *     summary: Get all products
- *     tags: [Products]
- *     responses:
- *       200:
- *         description: List of products
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Product'
- *   post:
- *     summary: Create a new product
- *     tags: [Products]
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Product'
- *     responses:
- *       201:
- *         description: Product created successfully
- *       401:
- *         description: Unauthorized
- */
+router
+  .get("/vendor", auth, checkRole("vendor"), getVendorProducts)
+  .post("/vendor", auth, checkRole("vendor"), createProduct);
+router
+  .get("/vendor/:id", auth, checkRole("vendor"), getVendorProductById)
+  .patch("/vendor/:id", auth, checkRole("vendor"), updateProduct)
+  .delete("/vendor/:id", auth, checkRole("vendor"), deleteProduct);
 
-/**
- * @swagger
- * /api/products/{id}:
- *   get:
- *     summary: Get product by ID
- *     tags: [Products]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: Product ID
- *     responses:
- *       200:
- *         description: Product details
- *       404:
- *         description: Product not found
- *   patch:
- *     summary: Update a product
- *     tags: [Products]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: Product ID
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Product'
- *     responses:
- *       200:
- *         description: Product updated successfully
- *   delete:
- *     summary: Delete a product
- *     tags: [Products]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: Product ID
- *     responses:
- *       200:
- *         description: Product deleted successfully
- */
+router
+  .route("/vendor/:productId/variants")
+  .get(auth, checkRole("vendor"), getProductVariants)
+  .post(auth, checkRole("vendor"), addVariant);
 
-/**
- * @swagger
- * /api/products/category/{categoryId}:
- *   get:
- *     summary: Get products by category
- *     tags: [Products]
- *     parameters:
- *       - in: path
- *         name: categoryId
- *         schema:
- *           type: string
- *         required: true
- *         description: Category ID
- *     responses:
- *       200:
- *         description: List of products in category
- */
+router
+  .route("/vendor/:productId/variants/:variantId")
+  .get(auth, checkRole("vendor"), getVariantById)
+  .patch(auth, checkRole("vendor"), updateVariant)
+  .delete(auth, checkRole("vendor"), deleteVariant);
 
-/**
- * @swagger
- * /api/products/filter/color:
- *   get:
- *     summary: Get products by color
- *     tags: [Products]
- *     parameters:
- *       - in: query
- *         name: color
- *         schema:
- *           type: string
- *         required: true
- *         description: Product color
- *     responses:
- *       200:
- *         description: List of products with specified color
- */
+router.get(
+  "/vendor/category/:categoryId",
+  auth,
+  checkRole("vendor"),
+  getProductsVendorByCategory
+);
 
-/**
- * @swagger
- * /api/products/vendor/products:
- *   get:
- *     summary: Get vendor's products
- *     tags: [Products]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: List of vendor's products
- *       401:
- *         description: Unauthorized
- */
-
-router.get('/', getAllProducts);
-router.get('/category/:categoryId',auth, getProductsByCategory);
-router.get('/filter/color', getProductsByColor);
-
-router.post('/', auth,createProduct);
-router.get('/vendor', auth,getVendorProducts);
-router.patch('/:id', auth,updateProduct);
-router.delete('/:id', auth,deleteProduct);
-router.get('/:id', getProductById);
+router.get("/", getAllProducts);
+router.get("/:id", getProductById);
+router.get("/:productId/variants", getProductVariants);
+router.get("/:productId/variants/:variantId", getVariantById);
 
 module.exports = router;

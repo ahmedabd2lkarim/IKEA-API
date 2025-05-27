@@ -8,8 +8,13 @@ const validateProduct = require("../utils/productValidator");
 require("dotenv").config({ path: path.join(__dirname, "../.env") });
 
 async function getDefaultIds() {
-  const vendor = await User.findOne({ role: "vendor" });
-  const category = await Category.findOne();
+  const vendor = await User.findOne({
+    _id: "6824f525a759d67a4cbd4635",
+    role: "vendor",
+  });
+  const category = await Category.findOne({
+    _id: "67b724ef9379cb0ddd1b0962",
+  });
 
   if (!vendor || !category) {
     throw new Error("Please create at least one vendor and category first");
@@ -74,7 +79,7 @@ async function importProducts() {
 
     const { vendorId, categoryId, vendorName, categoryName } =
       await getDefaultIds();
-    const productsData = require("../data2.json");
+    const productsData = require("../Kitchen.json");
 
     let importStats = {
       totalProducts: productsData.products.length,
@@ -139,8 +144,6 @@ async function importProducts() {
             }
           }
 
-          ///////////////////
-          // Handle color extraction from imageAlt
           const productColors = extractProductColors(product.imageAlt);
 
           const variants = (product.variants || [])
@@ -303,7 +306,7 @@ async function importProducts() {
                 return null;
               }
             })
-            .filter(Boolean); // Remove any null variants
+            .filter(Boolean);
 
           if (variants.length > 0) {
             importStats.productsWithVariants++;
@@ -336,7 +339,6 @@ async function importProducts() {
       })
       .filter(Boolean);
 
-    // Log import statistics
     console.log(`
 Import Statistics:
 - Total products processed: ${importStats.processedProducts}
