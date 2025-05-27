@@ -3,13 +3,14 @@ const User = require("../models/User");
 const Category = require("../models/Category_Schema");
 const Product = require("../models/product");
 const bcrypt = require("bcrypt");
+const OrderModel = require("../models/order");
 
 const getTotalRevenueForMonth = async (req, res) => {
     try {
         const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
         const endOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
 
-        const totalRevenue = await CartModel.aggregate([
+        const totalRevenue = await OrderModel.aggregate([
             {
                 $match: {
                     createdAt: { $gte: startOfMonth, $lte: endOfMonth },
@@ -47,7 +48,7 @@ const getUserCount = async (req, res) => {
 };
 const getRevenueTrends = async (req, res) => {
     try {
-        const revenueTrends = await CartModel.aggregate([
+        const revenueTrends = await OrderModel.aggregate([
             {
                 $match: {
                     status: "delivered" // ✅ Only count delivered orders
@@ -104,7 +105,7 @@ const GetOrders = async (req, res) => {
             return res.status(403).json("Only Admins");
         }
 
-        let orders = await CartModel.find().populate("userID", "name email").lean();
+        let orders = await OrderModel.find().populate("userID", "name email").lean();
 
         let formattedOrders = orders.map(order => ({
             orderID: order._id,
@@ -113,7 +114,7 @@ const GetOrders = async (req, res) => {
             totalItems: order.orderItems.reduce((sum, item) => sum + item.quantity, 0),
             totalAmount: order.total,
             status: order.status,
-            paymentMethod: order.paymentMethod,
+            // paymentMethod: order.paymentMethod,
             createdAt: order.createdAt
         }));
 
