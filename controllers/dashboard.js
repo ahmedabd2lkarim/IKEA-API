@@ -12,7 +12,7 @@ let getTotalRevenueForMonth = async (req, res) => {
 
         const totalRevenue = await CartModel.aggregate([
             {
-                $match: { createdAt: { $gte: startOfMonth, $lte: endOfMonth } }
+                $match: { createdAt: { $gte: startOfMonth, $lte: endOfMonth } , status: "delivered" }
             },
             {
                 $group: { _id: null, totalRevenue: { $sum: "$total" } }
@@ -46,6 +46,11 @@ const getUserCount = async (req, res) => {
 const getRevenueTrends = async (req, res) => {
     try {
         const revenueTrends = await CartModel.aggregate([
+            {
+                $match: {
+                    status: "delivered" // ✅ Only count delivered orders
+                }
+            },
             {
                 $group: {
                     _id: { $month: "$createdAt" },
