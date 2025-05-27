@@ -3,10 +3,11 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const Order = require("../models/order");
 const Cart = require("../models/cart");
 const User = require('../models/User');
+const Product = require('../models/product');
 
 const stripeWebhook = async (req, res) => {
   console.log("Received webhook event from Stripe");
-  
+
   const sig = req.headers["stripe-signature"];
   let event;
 
@@ -24,17 +25,17 @@ const stripeWebhook = async (req, res) => {
   if (event.type === "checkout.session.completed") {
     const session = event.data.object;
     const userId = session.metadata.userId;
-    const user= await User.findById(userId);
+    const user = await User.findById(userId);
     user.homeAddress = session.metadata.address;
     user.mobileNumber = session.metadata.mobile;
     await user.save();
     try {
-      const cart = await Cart.findOne({ userID:userId })
+      const cart = await Cart.findOne({ userID: userId })
 
       const newOrder = new Order({
         userID: userId,
         orderItems: cart.cartItems,
-        total:cart.total,
+        total: cart.total,
         status: "processing",
         shippingAddress: session.metadata.address,
         paymentStatus: "Paid",
@@ -45,6 +46,13 @@ const stripeWebhook = async (req, res) => {
 
       await Cart.findOneAndDelete({ userID: userId });
 
+      for (const item of newOrder.orderItems) {
+        const product = await Product.findById(item.prdID);
+        if (product) {
+          product.stockQuantity -= item.quantity;
+          await product.save();
+        }
+      }
       console.log("Order created successfully after payment.");
     } catch (err) {
       console.error("Failed to create order:", err);

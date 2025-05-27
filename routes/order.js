@@ -5,6 +5,7 @@ const { getAllOrders,
     createOrder,
     updateOrderStatus,
     getUserOrders,
+    cancelOrder,
     getOrderById } = require("../controllers/order");
 const { auth } = require("../middleware/auth");
 
@@ -20,5 +21,6 @@ router.patch('/status/:id',auth,updateOrderStatus);
 
 router.post('/newOrder',auth,createOrder);
 
+router.patch('/cancel/:id',auth, cancelOrder);
 
 module.exports = router;
