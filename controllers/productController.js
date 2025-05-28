@@ -88,12 +88,67 @@ exports.getAllProducts = catchAsync(async (req, res) => {
     ];
   }
 
+  // Width filtering
+  if (minWidth || maxWidth) {
+    query['measurement.width'] = {};
+    if (minWidth) query['measurement.width'].$gte = Number(minWidth);
+    if (maxWidth) query['measurement.width'].$lte = Number(maxWidth);
+  }
+
+  // Height filtering
+  if (minHeight || maxHeight) {
+    query['measurement.height'] = {};
+    if (minHeight) query['measurement.height'].$gte = Number(minHeight);
+    if (maxHeight) query['measurement.height'].$lte = Number(maxHeight);
+  }
+
+  // Depth filtering
+  if (minDepth || maxDepth) {
+    query['measurement.depth'] = {};
+    if (minDepth) query['measurement.depth'].$gte = Number(minDepth);
+    if (maxDepth) query['measurement.depth'].$lte = Number(maxDepth);
+  }
+
+  // Search in name only - match any name containing the search term
+  if (search) {
+    query.name = { $regex: search, $options: 'i' };
+  }
+
+  // Execute query with pagination
   const products = await Product.find(query)
     .sort(sort)
     .limit(limit * 1)
     .skip((page - 1) * limit);
 
+  console.log('Number of products returned:', products.length);
+
+  // Get total count for pagination
   const total = await Product.countDocuments(query);
+
+  // Get all products for the category to calculate filters (without pagination)
+  const allProducts = categoryName ?
+    await Product.find({ categoryName: { $regex: categoryName, $options: 'i' } }) :
+    await Product.find();
+
+  // Calculate available colors with counts
+  const colorMap = new Map();
+  allProducts.forEach(product => {
+    const productColor = product.color?.[language];
+    if (productColor) {
+      colorMap.set(productColor, (colorMap.get(productColor) || 0) + 1);
+    }
+  });
+
+  // Calculate price ranges
+  const prices = allProducts.map(p => p.price.currentPrice);
+  const minPrice = Math.min(...prices);
+  const maxPrice = Math.max(...prices);
+
+  // Get unique colors with counts
+  const availableColors = Array.from(colorMap.entries()).map(([color, count]) => ({
+    color,
+    count
+  }));
 
   res.status(200).json({
     status: "success",

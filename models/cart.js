@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const orderItem=new mongoose.Schema({
+const cartItemSchema =new mongoose.Schema({
     prdID:{
         type: mongoose.Schema.ObjectId,
         ref: 'Product',
@@ -13,27 +13,12 @@ const orderItem=new mongoose.Schema({
 
 const CartSchema =  new mongoose.Schema({
     total: Number,
-    orderItems: [orderItem],
+    cartItems: [cartItemSchema],
     userID:{
         type: mongoose.Schema.ObjectId,
         ref: 'User',
         required:true
     },
-    shippingFee:{
-        type:Number,
-        required:true
-    },
-    status:{
-        type:String,
-        enum:["pending", "delivered", "cancelled" ,"shipped" , "processing"],
-        default: "pending"
-    },
-    paymentMethod:{
-        type:String,
-        enum:["credit","cash"],
-        default:"cash"
-    },
-    subTotal:Number
 },{ timestamps: true });
 
 const CartModel=mongoose.model('Cart',CartSchema);
