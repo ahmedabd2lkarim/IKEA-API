@@ -18,8 +18,8 @@ exports.createProduct = async (req, res) => {
 exports.getAllProducts = catchAsync(async (req, res) => {
   const {
     page = 1,
-    limit = 100,
-    sort = "-createdAt",
+    limit: limitParam = 20,
+    sort = '-createdAt',
     categoryName,
     priceMin,
     priceMax,
@@ -31,61 +31,32 @@ exports.getAllProducts = catchAsync(async (req, res) => {
     maxHeight,
     minDepth,
     maxDepth,
-    language = "en",
+    language = 'en'
   } = req.query;
+
+
+  // Validate and parse limit - ensure it's a number and within bounds
+  const limit = Math.min(Math.max(parseInt(limitParam, 10) || 100, 1), 100);
+
+  console.log('Parsed limit value:', limit);
 
   const query = {};
 
   // Category name filtering
   if (categoryName) {
-    query[`categoryName`] = { $regex: categoryName, $options: "i" };
+    query[`categoryName`] = { $regex: categoryName, $options: 'i' };
   }
 
   // Price range filtering
   if (priceMin || priceMax) {
-    query["price.currentPrice"] = {};
-    if (priceMin) query["price.currentPrice"].$gte = Number(priceMin);
-    if (priceMax) query["price.currentPrice"].$lte = Number(priceMax);
+    query['price.currentPrice'] = {};
+    if (priceMin) query['price.currentPrice'].$gte = Number(priceMin);
+    if (priceMax) query['price.currentPrice'].$lte = Number(priceMax);
   }
 
   // Color filtering
   if (color) {
-    query[`color.${language}`] = { $regex: color, $options: "i" };
-  }
-
-  // Width filtering
-  if (minWidth || maxWidth) {
-    query["measurement.width"] = {};
-    if (minWidth) query["measurement.width"].$gte = Number(minWidth);
-    if (maxWidth) query["measurement.width"].$lte = Number(maxWidth);
-  }
-
-  // Height filtering
-  if (minHeight || maxHeight) {
-    query["measurement.height"] = {};
-    if (minHeight) query["measurement.height"].$gte = Number(minHeight);
-    if (maxHeight) query["measurement.height"].$lte = Number(maxHeight);
-  }
-
-  // Depth filtering
-  if (minDepth || maxDepth) {
-    query["measurement.depth"] = {};
-    if (minDepth) query["measurement.depth"].$gte = Number(minDepth);
-    if (maxDepth) query["measurement.depth"].$lte = Number(maxDepth);
-  }
-
-  // Search in name and description
-  if (search) {
-    query.$or = [
-      { name: { $regex: search, $options: "i" } },
-      { [`short_description.${language}`]: { $regex: search, $options: "i" } },
-      {
-        [`product_details.product_details_paragraphs.${language}`]: {
-          $regex: search,
-          $options: "i",
-        },
-      },
-    ];
+    query[`color.${language}`] = { $regex: color, $options: 'i' };
   }
 
   // Width filtering
@@ -117,10 +88,10 @@ exports.getAllProducts = catchAsync(async (req, res) => {
   // Execute query with pagination
   const products = await Product.find(query)
     .sort(sort)
-    .limit(limit * 1)
-    .skip((page - 1) * limit);
+    .limit(limit)
+    .skip((parseInt(page, 10) - 1) * limit);
 
-  console.log('Number of products returned:', products.length);
+  // console.log('Number of products returned:', products.length);
 
   // Get total count for pagination
   const total = await Product.countDocuments(query);
@@ -151,12 +122,22 @@ exports.getAllProducts = catchAsync(async (req, res) => {
   }));
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     results: products.length,
     totalPages: Math.ceil(total / limit),
     currentPage: Number(page),
     total,
-    data: products,
+    limit: parseInt(limit, 10),
+    appliedLimit: products.length,
+    // Add filter information
+    filters: {
+      colors: availableColors,
+      priceRange: {
+        min: minPrice,
+        max: maxPrice
+      }
+    },
+    data: products
   });
 });
 
