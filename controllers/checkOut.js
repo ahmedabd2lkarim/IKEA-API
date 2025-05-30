@@ -28,8 +28,8 @@ const createStripeSession = async (req, res) => {
       payment_method_types: ["card"],
       line_items,
       mode: "payment",
-      success_url: `http://localhost:5173/`,
-      cancel_url: `http://localhost:5173/cart`,
+      success_url: `${process.env.CLIENT_URL}/profile/MyOrders`,
+      cancel_url: `${process.env.CLIENT_URL}`,
       metadata: { userId: req.user.id , address, email, mobile },
     });
     res.status(200).json({ sessionURL: session.url });

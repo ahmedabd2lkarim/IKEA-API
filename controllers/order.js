@@ -122,7 +122,7 @@ let cancelOrder = async (req, res) => {
     if (!order) {
       return res.status(404).json({ error: 'Order not found' });
     }
-    if (order.status === 'Delivered' || order.status === 'Cancelled') {
+    if (order.status === 'delivered' || order.status === 'cancelled') {
       return res.status(400).json({ error: 'Cannot cancel this order' });
     }
     console.log(order);
@@ -137,7 +137,7 @@ let cancelOrder = async (req, res) => {
       }
     }
 
-     for (const item of newOrder.orderItems) {
+     for (const item of order.orderItems) {
         const product = await Product.findById(item.prdID);
         if (product) {
           product.stockQuantity += item.quantity;
