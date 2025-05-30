@@ -6,8 +6,6 @@ const User = require('../models/User');
 const Product = require('../models/product');
 
 const stripeWebhook = async (req, res) => {
-  console.log("Received webhook event from Stripe");
-
   const sig = req.headers["stripe-signature"];
   let event;
 

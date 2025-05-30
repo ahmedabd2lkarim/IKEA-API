@@ -29,7 +29,7 @@ const createStripeSession = async (req, res) => {
       line_items,
       mode: "payment",
       success_url: `${process.env.CLIENT_URL}/profile/MyOrders`,
-      cancel_url: `${process.env.CLIENT_URL}`,
+      cancel_url: `${process.env.CLIENT_URL}/cancel`,
       metadata: { userId: req.user.id , address, email, mobile },
     });
     res.status(200).json({ sessionURL: session.url });
