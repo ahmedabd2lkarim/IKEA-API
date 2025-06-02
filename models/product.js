@@ -102,6 +102,14 @@ const variantSchema = new mongoose.Schema(
       },
     },
     images: [String],
+    inStock: {
+      type: Boolean,
+      default: true,
+    },
+    stockQuantity: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,
@@ -264,11 +272,9 @@ const productSchema = new mongoose.Schema(
 productSchema.virtual("imageAlt").get(function () {
   const productName = this.name || "منتج";
   const colorEn = this.color?.en || "color";
-  const colorAr = this.color?.ar ||  "لون";
+  const colorAr = this.color?.ar || "لون";
 
-  const productMeasurement = formatMeasurement(
-    this.measurement
-  );
+  const productMeasurement = formatMeasurement(this.measurement);
 
   return {
     en: `${productName}, ${colorEn}, ${productMeasurement}`,
