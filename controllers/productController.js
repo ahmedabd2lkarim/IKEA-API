@@ -1,4 +1,4 @@
-const Product = require("../models/product");
+const { Product } = require("../models/product");
 const { catchAsync } = require("../utils/errorHandler");
 
 exports.createProduct = async (req, res) => {
@@ -7,7 +7,7 @@ exports.createProduct = async (req, res) => {
       return res.status(403).json("Only Vendors");
     }
     const product = new Product({ ...req.body, vendorId: req.user.id });
-    console.log(product)
+    console.log(product);
     await product.save();
     res.status(201).json(product);
   } catch (error) {
@@ -19,7 +19,7 @@ exports.getAllProducts = catchAsync(async (req, res) => {
   const {
     page = 1,
     limit: limitParam = 20,
-    sort = '-createdAt',
+    sort = "-createdAt",
     categoryName,
     priceMin,
     priceMax,
@@ -31,113 +31,103 @@ exports.getAllProducts = catchAsync(async (req, res) => {
     maxHeight,
     minDepth,
     maxDepth,
-    language = 'en'
+    language = "en",
   } = req.query;
 
-
-  // Validate and parse limit - ensure it's a number and within bounds
   const limit = Math.min(Math.max(parseInt(limitParam, 10) || 100, 1), 100);
 
-  console.log('Parsed limit value:', limit);
+  console.log("Parsed limit value:", limit);
 
   const query = {};
 
-  // Category name filtering
+  
   if (categoryName) {
-    query[`categoryName`] = { $regex: categoryName, $options: 'i' };
+    query[`categoryName`] = { $regex: categoryName, $options: "i" };
   }
 
-  // Price range filtering
+  
   if (priceMin || priceMax) {
-    query['price.currentPrice'] = {};
-    if (priceMin) query['price.currentPrice'].$gte = Number(priceMin);
-    if (priceMax) query['price.currentPrice'].$lte = Number(priceMax);
+    query["price.currentPrice"] = {};
+    if (priceMin) query["price.currentPrice"].$gte = Number(priceMin);
+    if (priceMax) query["price.currentPrice"].$lte = Number(priceMax);
   }
 
-  // Color filtering
   if (color) {
-    query[`color.${language}`] = { $regex: color, $options: 'i' };
+    query[`color.${language}`] = { $regex: color, $options: "i" };
   }
 
-  // Width filtering
+ 
   if (minWidth || maxWidth) {
-    query['measurement.width'] = {};
-    if (minWidth) query['measurement.width'].$gte = Number(minWidth);
-    if (maxWidth) query['measurement.width'].$lte = Number(maxWidth);
+    query["measurement.width"] = {};
+    if (minWidth) query["measurement.width"].$gte = Number(minWidth);
+    if (maxWidth) query["measurement.width"].$lte = Number(maxWidth);
   }
 
-  // Height filtering
   if (minHeight || maxHeight) {
-    query['measurement.height'] = {};
-    if (minHeight) query['measurement.height'].$gte = Number(minHeight);
-    if (maxHeight) query['measurement.height'].$lte = Number(maxHeight);
+    query["measurement.height"] = {};
+    if (minHeight) query["measurement.height"].$gte = Number(minHeight);
+    if (maxHeight) query["measurement.height"].$lte = Number(maxHeight);
   }
 
-  // Depth filtering
   if (minDepth || maxDepth) {
-    query['measurement.depth'] = {};
-    if (minDepth) query['measurement.depth'].$gte = Number(minDepth);
-    if (maxDepth) query['measurement.depth'].$lte = Number(maxDepth);
+    query["measurement.depth"] = {};
+    if (minDepth) query["measurement.depth"].$gte = Number(minDepth);
+    if (maxDepth) query["measurement.depth"].$lte = Number(maxDepth);
   }
 
-  // Search in name only - match any name containing the search term
   if (search) {
-    query.name = { $regex: search, $options: 'i' };
+    query.name = { $regex: search, $options: "i" };
   }
 
-  // Execute query with pagination
   const products = await Product.find(query)
     .sort(sort)
     .limit(limit)
     .skip((parseInt(page, 10) - 1) * limit);
 
-  // console.log('Number of products returned:', products.length);
 
-  // Get total count for pagination
   const total = await Product.countDocuments(query);
 
-  // Get all products for the category to calculate filters (without pagination)
-  const allProducts = categoryName ?
-    await Product.find({ categoryName: { $regex: categoryName, $options: 'i' } }) :
-    await Product.find();
+  const allProducts = categoryName
+    ? await Product.find({
+        categoryName: { $regex: categoryName, $options: "i" },
+      })
+    : await Product.find();
 
-  // Calculate available colors with counts
   const colorMap = new Map();
-  allProducts.forEach(product => {
+  allProducts.forEach((product) => {
     const productColor = product.color?.[language];
     if (productColor) {
       colorMap.set(productColor, (colorMap.get(productColor) || 0) + 1);
     }
   });
 
-  // Calculate price ranges
-  const prices = allProducts.map(p => p.price.currentPrice);
+  const prices = allProducts.map((p) => p.price.currentPrice);
   const minPrice = Math.min(...prices);
   const maxPrice = Math.max(...prices);
 
-  // Get unique colors with counts
-  const availableColors = Array.from(colorMap.entries()).map(([color, count]) => ({
-    color,
-    count
-  }));
+  const availableColors = Array.from(colorMap.entries()).map(
+    ([color, count]) => ({
+      color,
+      count,
+    })
+  );
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     results: products.length,
     totalPages: Math.ceil(total / limit),
     currentPage: Number(page),
     total,
     limit: parseInt(limit, 10),
     appliedLimit: products.length,
-    // Add filter information
     filters: {
       colors: availableColors,
       priceRange: {
         min: minPrice,
-        max: maxPrice
-      }
+        max: maxPrice,
+      },
     },
-    data: products
+    data: products,
   });
 });
 
@@ -299,8 +289,15 @@ exports.getVariantById = async (req, res) => {
     if (!variant) {
       return res.status(404).json({ message: "Variant not found" });
     }
+    const variantWithProductInfo = {
+      ...variant.toObject(),
+      mainProductId: product._id,
+      mainProductName: product.name,
+      categoryName: product.categoryName,
+      vendorName: product.vendorName,
+    };
 
-    res.json(variant);
+    res.json(variantWithProductInfo);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

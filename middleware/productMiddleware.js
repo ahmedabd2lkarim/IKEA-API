@@ -1,4 +1,4 @@
-const Product = require('../models/product');
+const {Product} = require('../models/product');
 
 exports.checkProductOwnership = async (req, res, next) => {
   const product = await Product.findById(req.params.id);

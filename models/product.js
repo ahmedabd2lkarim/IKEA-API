@@ -330,5 +330,5 @@ productSchema.pre("save", async function (next) {
 });
 
 const Product = mongoose.model("Product", productSchema);
-
-module.exports = Product;
+const Variant = mongoose.model("Variant", variantSchema);
+module.exports = { Product, Variant };

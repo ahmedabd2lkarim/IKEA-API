@@ -1,7 +1,7 @@
 const Favourite = require('../models/Favourite');
-const Product = require('../models/product');
+const {Product} = require('../models/product');
 
-// Get favourites document by user ID
+
 exports.getFavouritesByUserId = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -18,7 +18,7 @@ exports.getFavouritesByUserId = async (req, res) => {
     }
 };
 
-// Add a new list
+
 exports.addList = async (req, res) => {
     const userId = req.user.id;
     const { name } = req.body;
@@ -38,7 +38,6 @@ exports.addList = async (req, res) => {
     }
 };
 
-// Add a product to a specific list by listId
 exports.addProductToList = async (req, res) => {
     const userId = req.user.id;
     const { listId, productId } = req.body;

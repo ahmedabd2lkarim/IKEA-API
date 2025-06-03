@@ -1,9 +1,9 @@
-require('dotenv').config();
+require("dotenv").config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const Order = require("../models/order");
 const Cart = require("../models/cart");
-const User = require('../models/User');
-const Product = require('../models/product');
+const User = require("../models/User");
+const { Product } = require("../models/product");
 
 const stripeWebhook = async (req, res) => {
   const sig = req.headers["stripe-signature"];
@@ -28,7 +28,7 @@ const stripeWebhook = async (req, res) => {
     user.mobileNumber = session.metadata.mobile;
     await user.save();
     try {
-      const cart = await Cart.findOne({ userID: userId })
+      const cart = await Cart.findOne({ userID: userId });
 
       const newOrder = new Order({
         userID: userId,
@@ -43,12 +43,42 @@ const stripeWebhook = async (req, res) => {
       await newOrder.save();
 
       await Cart.findOneAndDelete({ userID: userId });
-
       for (const item of newOrder.orderItems) {
         const product = await Product.findById(item.prdID);
-        if (product) {
-          product.stockQuantity -= item.quantity;
-          await product.save();
+
+        if (!product) {
+          console.error(`Product not found: ${item.prdID}`);
+          continue;
+        }
+
+        if (item.variantId) {
+          const variant = product.variants.id(item.variantId);
+          if (variant) {
+            if (variant.stockQuantity !== undefined) {
+              variant.stockQuantity = Math.max(
+                0,
+                variant.stockQuantity - item.quantity
+              );
+            }
+
+            await product.save();
+            console.log(
+              `Updated stock for variant ${item.variantId} of product ${item.prdID}`
+            );
+          } else {
+            console.error(
+              `Variant ${item.variantId} not found in product ${item.prdID}`
+            );
+          }
+        } else {
+          if (product.stockQuantity !== undefined) {
+            product.stockQuantity = Math.max(
+              0,
+              product.stockQuantity - item.quantity
+            );
+            await product.save();
+            console.log(`Updated stock for main product ${item.prdID}`);
+          }
         }
       }
       console.log("Order created successfully after payment.");

@@ -1,5 +1,5 @@
 const PromoCategory = require('../models/PromoCategory');
-const Product = require("../models/product");
+const {Product} = require("../models/product");
 
 exports.createPromoCategory = async (req, res) => {
     try {

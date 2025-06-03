@@ -1,7 +1,19 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const {auth} = require("../middleware/auth");
-const {clearCart,addTOCart,getCurrentUserCart,getAllOrders,deleteOrderItem,getOrdersByVendor,getCurrentUserOrder,deleteOrder,createOrder,updateOrderStatus,updateOrderAmount} = require('../controllers/cart')
+const { auth } = require("../middleware/auth");
+const {
+  clearCart,
+  addTOCart,
+  getCurrentUserCart,
+  getAllOrders,
+  deleteOrderItem,
+  getOrdersByVendor,
+  getCurrentUserOrder,
+  deleteOrder,
+  createOrder,
+  updateOrderStatus,
+  updateOrderAmount,
+} = require("../controllers/cart");
 
 /**
  * @swagger
@@ -228,10 +240,10 @@ const {clearCart,addTOCart,getCurrentUserCart,getAllOrders,deleteOrderItem,getOr
  *         description: Item removed from order successfully
  */
 
-router.get('/showMyCart',auth,getCurrentUserCart)
+router.get("/showMyCart", auth, getCurrentUserCart);
 
-router.patch('/cartOP',auth,addTOCart)
+router.patch("/cartOP", auth, addTOCart);
 
-router.delete('/:id',auth,clearCart)
+router.delete("/:id", auth, clearCart);
 
 module.exports = router;

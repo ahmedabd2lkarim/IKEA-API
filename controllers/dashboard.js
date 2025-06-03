@@ -1,7 +1,7 @@
 const CartModel = require("../models/cart");
 const User = require("../models/User");
 const Category = require("../models/Category_Schema");
-const Product = require("../models/product");
+const {Product} = require("../models/product");
 const bcrypt = require("bcrypt");
 const OrderModel = require("../models/order");
 
@@ -51,7 +51,7 @@ const getRevenueTrends = async (req, res) => {
         const revenueTrends = await OrderModel.aggregate([
             {
                 $match: {
-                    status: "delivered" // ✅ Only count delivered orders
+                    status: "delivered" 
                 }
             },
             {
@@ -114,7 +114,7 @@ const GetOrders = async (req, res) => {
             totalItems: order.orderItems.reduce((sum, item) => sum + item.quantity, 0),
             totalAmount: order.total,
             status: order.status,
-            // paymentMethod: order.paymentMethod,
+            
             createdAt: order.createdAt
         }));
 

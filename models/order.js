@@ -1,15 +1,20 @@
 const mongoose = require('mongoose');
 const orderItemSchema = new mongoose.Schema({
-    prdID: {
-        type: mongoose.Schema.ObjectId,
-        ref: 'Product',
-        required: true
-    },
-    quantity: {
-        type: Number,
-        required: true,
-    }
-})
+  prdID: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Product",
+    required: true,
+  },
+  variantId: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Variant",
+    required: false,
+  },
+  quantity: {
+    type: Number,
+    required: true,
+  },
+});
 
 const OrderSchema = new mongoose.Schema({
     total: Number,
